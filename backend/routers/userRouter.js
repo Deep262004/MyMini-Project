@@ -1,5 +1,5 @@
 const express = require('express');
-const Model = require('../models/BlogModels')  
+const Model = require('../models/UserModel') //using database connected
 
 const router = express.Router();
 
@@ -11,11 +11,16 @@ router.post("/add", (req, res) => {
       .then((result) => {
             res.status(200).json(result)
       }).catch((err) => {
-            res.status(500).json(err);
+            console.log(err);
+            if(err?.code === 11000){
+            res.status(500).json({message: 'Email already registered'});
+            }else{
+                  res.status(500).json({message: 'Internal server error'});
+            }
       });    
 });
 
-router.get("/getall", (req, res) => {   
+router.get("/getall", (req, res) => {  // Get method is used to retrieve data or read data
       //res.send('response from user getall'); 
       Model.find()
       .then((result) => {

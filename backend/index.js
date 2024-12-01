@@ -1,15 +1,21 @@
 // importing express
 const express = require('express');
 const UserRouters = require('./routers/userRouter');
+const cors = require('cors');
+const BlogRouter = require('./routers/blogRouter');
 
 // creating an express app
-
 const app = express();
+
 const port = 5000;
 
 //middleware
+app.use(cors({
+      origin: ['http://localhost:3000']
+}))
 app.use(express.json());
 app.use('/user', UserRouters);
+app.use('/blog', BlogRouter);
 
 // route or endpoint
 app.get('/', (req, res) => {
@@ -27,6 +33,7 @@ app.get('/getall', (req, res) => {
 app.get('/delete', (req, res) => {
       res.send('response from delete');
 })
+
 
 //starting the server
 app.listen(port, () => { console.log('server started'); })
