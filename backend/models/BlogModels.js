@@ -4,9 +4,10 @@ const blogSchema = new Schema(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String },
+    category: { type: String },
     content: { type: String, required: true },
     developer: { type: String, required: true, trim: true },
-    tags: [{ type: String, trim: true }],
+    tags: { type: String, trim: true },
     publishedDate: { type: Date, default: Date.now },
     updatedDate: { type: Date, default: Date.now },
     featuredImage: {

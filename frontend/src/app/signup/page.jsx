@@ -46,7 +46,7 @@ const Signup = () => {
         .then((result) => {
           toast.success('User Registered successfully');
           resetForm();
-          // router.push('/login');
+          router.push('/login');
         }).catch((err) => {
           console.log(err);
           toast.error( err?.response?.data?.message || 'Something went wrong');

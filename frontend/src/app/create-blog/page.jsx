@@ -4,12 +4,15 @@ import { useFormik } from 'formik';
 import MDEditor from '@uiw/react-md-editor';
 import { IconLoader3 } from '@tabler/icons-react';
 import { IconCheck } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const CreateBlog = () => {
 
   const [blogContent, setBlogContent] = useState('');
 
-  const router = Router();
+  const router = useRouter();
 
   // initializing formik
   const blogForm = useFormik({
@@ -17,13 +20,16 @@ const CreateBlog = () => {
       title: '',
       content: '',
       description: '',
+      developer: '',
       tags: ''
     },
 
-    onSubmit: (values, { resetForm, setSubmitting }) => {
+    OnSubmit: (values, { resetForm, setSubmitting }) => {
+      values.content = blogContent;
       axios.post('http://localhost:5000/blog/add', values)
         .then((result) => {
           toast.success('Blog Registered successfully');
+          router.push('/browse-blogs')
           resetForm();
         }).catch((err) => {
           console.log(err);
@@ -32,15 +38,14 @@ const CreateBlog = () => {
         });
 
       // send values to backend
-    },
-    validationSchema: SignupSchema
+    }
   })
 
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+    <div className="min-h-screen pt-5 bg-gray-100 flex justify-center">
 
-      <div className="bg-white rounded-lg shadow-lg p-8 w-96">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl">
         <h1 className="text-3xl font-semibold text-center text-gray-800">Create Your Blog</h1>
         <div className='p-5 border-b-2'>
 
@@ -60,19 +65,15 @@ const CreateBlog = () => {
                 className="w-full px-4 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />
             </div>
-
+            
             <div className="mt-6">
               <label className="block text-gray-700 text-lg font-medium mb-2" htmlFor="blogName">
-                Enter the Content:
+                Developer
               </label>
-              <MDEditor
-                value={blogContent}
-                onChange={setBlogContent}
-              />
               <input
                 type="text"
-                id="content"
-                value={blogForm.values.content}
+                id="developer"
+                value={blogForm.values.developer}
                 onChange={blogForm.handleChange}
                 placeholder=""
                 className="w-full px-4 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
@@ -81,16 +82,26 @@ const CreateBlog = () => {
 
             <div className="mt-6">
               <label className="block text-gray-700 text-lg font-medium mb-2" htmlFor="blogName">
+                Content
+              </label>
+              <MDEditor
+                value={blogContent}
+                onChange={setBlogContent}
+              />
+            </div>
+
+            <div className="mt-6">
+              <label className="block text-gray-700 text-lg font-medium mb-2" htmlFor="blogName">
                 Enter the Description:
               </label>
-              <input
+              <textarea
                 type="text"
-                id="blogAddress"
+                id="description"
                 value={blogForm.values.blogAddress}
                 onChange={blogForm.handleChange}
                 placeholder=""
                 className="w-full px-4 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              />
+              ></textarea>
             </div>
 
 
@@ -109,14 +120,14 @@ const CreateBlog = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-            <button
-                  type="submit"
-                  disabled={CreateBlog.isSubmitting}
-                  className="flex items-center gap-3 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                >
-                  {CreateBlog.isSubmitting ? <IconLoader3 className='animate-spin' /> : <IconCheck />}
-                  {CreateBlog.isSubmitting ? 'Submitting...' : 'Save'}
-                </button>
+              <button
+                type="submit"
+                disabled={CreateBlog.isSubmitting}
+                className="flex items-center gap-3 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              >
+                {CreateBlog.isSubmitting ? <IconLoader3 className='animate-spin' /> : <IconCheck />}
+                {CreateBlog.isSubmitting ? 'Submitting...' : 'Save'}
+              </button>
             </div>
 
           </form>

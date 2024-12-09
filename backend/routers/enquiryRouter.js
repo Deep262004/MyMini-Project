@@ -1,5 +1,5 @@
 const express = require('express');
-const Model = require('./models/UserModel') //using database connected
+const Model = require('../models/EnquiryModels')  
 
 const router = express.Router();
 
@@ -11,16 +11,11 @@ router.post("/add", (req, res) => {
       .then((result) => {
             res.status(200).json(result)
       }).catch((err) => {
-            console.log(err);
-            if(err?.code === 11000){
-            res.status(500).json({message: 'Email already registered'});
-            }else{
-                  res.status(500).json({message: 'Internal server error'});
-            }
+            res.status(500).json(err);
       });    
 });
 
-router.get("/getall", (req, res) => {  // Get method is used to retrieve data or read data
+router.get("/getall", (req, res) => {   
       //res.send('response from user getall'); 
       Model.find()
       .then((result) => {
@@ -29,15 +24,6 @@ router.get("/getall", (req, res) => {  // Get method is used to retrieve data or
             res.status(500).json(err); 
       });
 });
- //  ':' denotes url parameter
- router.get('/getbycity/:city', (req,res) => {
-      Model.find({city:req.params.city})
-      .then((result) => {
-            res.status(200).json(result)
-      }).catch((err) => {
-            res.status(500).json(err); 
-      });
- })
 
 router.get('/getbyid/:id', (req, res) => {
       //res.send('response from user getbyid');
